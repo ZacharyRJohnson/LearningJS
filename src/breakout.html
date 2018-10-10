@@ -18,32 +18,47 @@
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
 
-    var x = canvas.width/2;
-    var y = canvas.height-30;
+    var ballX = canvas.width/2;
+    var ballY = canvas.height-50;
     var circleRad= 10;
+
+    var barW = 150;
+    var barH = 25;
+    var barX = canvas.width/2 - barW/2;
+    var barY = canvas.height-30;
+
     var dx = 2;
     var dy = -2;
     function drawBall() {
         ctx.beginPath();
-        ctx.arc(x, y, circleRad, 0, Math.PI*2);
+        ctx.arc(ballX, ballY, circleRad, 0, Math.PI*2);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
     }
 
+    function drawBar() {
+        ctx.beginPath();
+        ctx.rect(barX, barY, barW, barH);
+        ctx.fillStyle = "#bc1a2a";
+        ctx.fill();
+        ctx.closePath();
+    }
+
     function edgeCheck() {
-        if(x === canvas.width - circleRad || x === 0 + circleRad)
+        if(ballX > canvas.width - circleRad || ballX < circleRad)
             dx *= -1;
-        if(y === canvas.height - circleRad || y === 0 + circleRad)
+        if(ballY > canvas.height - circleRad || ballY < circleRad)
             dy *= -1;
     }
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBall();
+        drawBar();
         edgeCheck();
-        x += dx;
-        y += dy;
+        ballX += dx;
+        ballY += dy;
     }
 
     setInterval(draw, 10);
