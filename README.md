@@ -1,2 +1,2 @@
 # LearningJS
-Learning JavaScript with the help of this tutorial: https://github.com/ZacharyRJohnson/Learning-JS.git
+Learning JavaScript with the help of this tutorial: https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
