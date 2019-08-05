@@ -20,7 +20,7 @@
 
     var ballX = canvas.width/2;
     var ballY = canvas.height-50;
-    var circleRad= 10;
+    var ballRad= 10;
 
     var barW = 150;
     var barH = 25;
@@ -29,9 +29,13 @@
 
     var dx = 2;
     var dy = -2;
+
+    var LEFT = false;
+    var RIGHT = false;
+
     function drawBall() {
         ctx.beginPath();
-        ctx.arc(ballX, ballY, circleRad, 0, Math.PI*2);
+        ctx.arc(ballX, ballY, ballRad, 0, Math.PI*2);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
         ctx.closePath();
@@ -45,16 +49,51 @@
         ctx.closePath();
     }
 
+    document.onkeydown = function(e) {
+        if(e.key === 'ArrowLeft') LEFT = true;
+        if(e.key === 'ArrowRight') RIGHT = true;
+    };
+
+    document.onkeyup = function(e) {
+        if(e.key === 'ArrowLeft') LEFT = false;
+        if(e.key === 'ArrowRight') RIGHT = false;
+    };
+
+    function moveBar() {
+        if(LEFT && (barX > 0)) barX -= 2;
+        if(RIGHT && ((barX + barW) < canvas.width)) barX += 2;
+    }
+
     function edgeCheck() {
-        if(ballX > canvas.width - circleRad || ballX < circleRad)
+        // Border Check
+        if(ballX > canvas.width - ballRad || ballX < ballRad)
             dx *= -1;
-        if(ballY > canvas.height - circleRad || ballY < circleRad)
+        if(ballY > canvas.height - ballRad || ballY < ballRad)
             dy *= -1;
+
+        // Bar and Ball Collision
+        let closestX = ballX;
+        let closestY = ballY;
+        
+        if(ballX < barX) closestX = barX;
+        else if(ballX > (barX + barW)) closestX = barX + barW;
+        if(ballY < barY) closestY = barY;
+        else if(ballY > (barY + barH)) closestY = barY + barH;
+
+        let distX = ballX - closestX;
+        let distY = ballY - closestY;
+        let distTotal = Math.sqrt((distX * distX) + (distY * distY));
+        
+        if(distTotal <= ballRad) {
+            dx *= (closestX === ballX) ? 1 : -1;
+            dy *= (closestY === ballY) ? 1 : -1;
+        }
     }
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBall();
+        moveBar();
         drawBar();
         edgeCheck();
         ballX += dx;
