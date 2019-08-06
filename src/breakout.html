@@ -23,9 +23,9 @@
     var ballRad= 10;
 
     var barW = 150;
-    var barH = 25;
+    var barH = 10;
     var barX = canvas.width/2 - barW/2;
-    var barY = canvas.height-30;
+    var barY = canvas.height-5;
 
     var dx = 2;
     var dy = -2;
@@ -66,27 +66,20 @@
 
     function edgeCheck() {
         // Border Check
-        if(ballX > canvas.width - ballRad || ballX < ballRad)
+        if((ballX + dx) > canvas.width - ballRad || (ballX + dx) < ballRad)
             dx *= -1;
-        if(ballY > canvas.height - ballRad || ballY < ballRad)
+        if((ballY + dy) < ballRad)
             dy *= -1;
+        else if((ballY + dy) > canvas.height - ballRad){
+            alert("GAME OVER");
+            document.location.reload();
+            clearInterval(interval);
+        }
 
         // Bar and Ball Collision
-        let closestX = ballX;
-        let closestY = ballY;
-        
-        if(ballX < barX) closestX = barX;
-        else if(ballX > (barX + barW)) closestX = barX + barW;
-        if(ballY < barY) closestY = barY;
-        else if(ballY > (barY + barH)) closestY = barY + barH;
-
-        let distX = ballX - closestX;
-        let distY = ballY - closestY;
-        let distTotal = Math.sqrt((distX * distX) + (distY * distY));
-        
-        if(distTotal <= ballRad) {
-            dx *= (closestX === ballX) ? 1 : -1;
-            dy *= (closestY === ballY) ? 1 : -1;
+        if((ballX + dx) > barX && (ballX + dx) < (barX + barW)) {
+            if((barY - (ballY + dy)) < ballRad )
+                dy *= -1;
         }
     }
 
@@ -100,7 +93,7 @@
         ballY += dy;
     }
 
-    setInterval(draw, 10);
+    let interval = setInterval(draw, 10);
 </script>
 </body>
 </html>
